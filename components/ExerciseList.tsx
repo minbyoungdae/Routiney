@@ -20,7 +20,7 @@ const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const ExerciseList = (props: Iprops) => {
   return (
     <View>
-      {props.list.length !== 0
+      {props.list !== []
         ? props.list.map((e: any, index: number) => {
             return (
               <View style={styles.textContainer} key={index}>
