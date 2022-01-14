@@ -9,14 +9,14 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ExerciseList from "./ExerciseList";
-import Tts from "./Tts";
+import * as TTS from "./TTS";
 
 const InputRoutine = () => {
-  const [list, setList] = useState<any>([]);
+  const [list, setList] = useState<Array<Object>>([]);
   const [minute, setMinute] = useState<string>();
   const [exercise, setExercise] = useState<string>();
   const [breakTime, setBreakTime] = useState<string>();
-  const [activeButton, setActiveButton] = useState<Boolean>(false);
+  const [play, setPlay] = useState<Boolean>(false);
   const onPress = () => {
     if (!(minute && exercise)) {
       Alert.alert("시간과 운동 이름을 입력해주세요");
@@ -29,10 +29,10 @@ const InputRoutine = () => {
     setExercise("");
     inputRef.current.blur();
   };
-  const inputRef = useRef<any>();
+  const inputRef = useRef<TextInput>();
 
   const deleteList = (index: number) => {
-    setList(list.filter((e: any, idx: number) => idx !== index));
+    setList(list.filter((e: Object, idx: number) => idx !== index));
   };
 
   const saveListData = async () => {
@@ -53,8 +53,9 @@ const InputRoutine = () => {
 
   const getData = async () => {
     try {
-      const listData: any = await AsyncStorage.getItem("@list");
-      const JSONListData: any = JSON.parse(listData);
+      const listData: string = await AsyncStorage.getItem("@list");
+      const JSONListData: Array<Object> = JSON.parse(listData);
+      console.log(JSONListData);
       if (JSONListData !== null) {
         setList(JSONListData);
       } else {
@@ -66,8 +67,8 @@ const InputRoutine = () => {
   };
 
   const getBTData = async () => {
-    const breakTimeData: any = await AsyncStorage.getItem("@BT");
-    const JSONBTData: any = JSON.parse(breakTimeData);
+    const breakTimeData: string = await AsyncStorage.getItem("@BT");
+    const JSONBTData: string = JSON.parse(breakTimeData);
     if (JSONBTData !== null) {
       setBreakTime(JSONBTData);
     } else {
@@ -88,7 +89,6 @@ const InputRoutine = () => {
     saveBTData();
   }, [breakTime]);
 
-  // todo 시작 중이면 시작 버튼 색 바뀌고, 종료되면 다시 바뀌기
   return (
     <>
       <View
@@ -99,12 +99,26 @@ const InputRoutine = () => {
         }}
       >
         <Pressable
-          style={activeButton ? styles.activeButton : styles.startButton}
-          onPress={() => Tts("start", setActiveButton, list, breakTime)}
+          style={play ? styles.activeButton : styles.playButton}
+          onPress={() => {
+            if (!play) {
+              setPlay(true);
+              TTS.startTTS(list, breakTime, setPlay);
+            }
+          }}
         >
           <Text>시작</Text>
         </Pressable>
-        <Pressable onPress={() => Tts("stop", setActiveButton)}>
+        <Pressable
+          onPress={() => {
+            setPlay(false);
+            TTS.stopTTS();
+          }}
+          style={({ pressed }) => [
+            pressed && styles.activeButton,
+            styles.playButton,
+          ]}
+        >
           <Text>종료</Text>
         </Pressable>
       </View>
@@ -140,8 +154,8 @@ const InputRoutine = () => {
           value={exercise}
           ref={inputRef}
         ></TextInput>
-        <Pressable style={styles.button} onPress={onPress}>
-          <Text style={styles.buttonText}>추가</Text>
+        <Pressable style={styles.inputButton} onPress={onPress}>
+          <Text style={styles.inputButtonText}>추가</Text>
         </Pressable>
       </View>
       <ExerciseList list={list} deleteList={deleteList} />
@@ -173,25 +187,25 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     padding: 10,
     width: 100,
-    marginRight: "10%",
+    marginRight: "5%",
     textAlign: "center",
     marginBottom: 20,
   },
-  button: {
+  inputButton: {
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 22,
     borderRadius: 4,
     backgroundColor: "black",
   },
-  buttonText: {
+  inputButtonText: {
     fontSize: 16,
     lineHeight: 21,
     fontWeight: "bold",
     letterSpacing: 0.25,
     color: "white",
   },
-  startButton: {
+  playButton: {
     backgroundColor: "#eee",
     alignItems: "center",
     justifyContent: "center",
