@@ -26,4 +26,12 @@
         >
           https://expo.dev/@minbyoungdae/routiney
         </a>
+       <br>📎 Blog:&nbsp;
+        <a
+          href="https://velog.io/@dkttk99/%EC%9A%B4%EB%8F%99-%EB%A3%A8%ED%8B%B4%EC%95%B1-%EB%A7%8C%EB%93%A4%EA%B8%B0"
+          target="_blank"
+          rel="noreferrer"
+        >
+          https://velog.io/@dkttk99/
+        </a>
         </div>
