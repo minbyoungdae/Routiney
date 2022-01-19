@@ -1,4 +1,4 @@
-
+<div>
 <div align="middle">
        <video src='https://user-images.githubusercontent.com/80196999/150165619-82f10bc3-256c-430b-9093-3b366ac044c1.mp4
 '></video>
@@ -14,7 +14,7 @@
         구현하였으며, setInterval과 clearInterval를 사용하여 시작, 종료 기능을
         구현했습니다.
         <p></p>
-        <span style={{ color: "red" }}>
+        <span style="color:#d3d3d3">
           * 예시 동영상은 시간 관계상 초 단위로 설정하였습니다.
         </span>
         <hr></hr>
@@ -26,3 +26,4 @@
         >
           https://expo.dev/@minbyoungdae/routiney
         </a>
+        </div>
